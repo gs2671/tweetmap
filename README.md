@@ -26,6 +26,5 @@ Google Maps API
 
 3) AWS - Elastic BeanStalk
 
-> 
-
+> http://twittmap-3.di2r3t83eh.us-east-1.elasticbeanstalk.com
 
