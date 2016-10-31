@@ -32,59 +32,62 @@ angular.module('twitApp').controller('homeController', ['$scope', '$http', '$mdD
 			 links.setMap(null);
 			 links =  new google.maps.Data({map:map_damage});
 			 console.log(search_key);
-			 $http.post("/search", search_key)
-			 .success(function(data) {
-			 	var latitudes = JSON.parse(JSON.stringify(data.latitude));
-				var longitudes = JSON.parse(JSON.stringify(data.longitude));
-				var text = JSON.parse(JSON.stringify(data.text));
-				var name = JSON.parse(JSON.stringify(data.name));
+			 $.ajax({
+	            url: '/search',
+	            data: search_key,
+	            type: 'GET',
+			 	success : function(data) {
+				 	var latitudes = JSON.parse(JSON.stringify(data.latitude));
+					var longitudes = JSON.parse(JSON.stringify(data.longitude));
+					var text = JSON.parse(JSON.stringify(data.text));
+					var name = JSON.parse(JSON.stringify(data.name));
 
-				for(i=0; i<latitudes.length; i++) {
-						var position = new google.maps.LatLng(latitudes[i], longitudes[i]);
-						var image = new google.maps.MarkerImage(
-							'/static/img/twitter.png',
-							null,
-							null,
-							null,
-							new google.maps.Size(21, 21));
-						
-						marker = new google.maps.Marker({
-							position: position,
-							map: map_damage,
-							title: "Tweet"
-						});
+					for(i=0; i<latitudes.length; i++) {
+							var position = new google.maps.LatLng(latitudes[i], longitudes[i]);
+							var image = new google.maps.MarkerImage(
+								'/static/img/twitter.png',
+								null,
+								null,
+								null,
+								new google.maps.Size(21, 21));
+							
+							marker = new google.maps.Marker({
+								position: position,
+								map: map_damage,
+								title: "Tweet"
+							});
 
-						marker.setIcon(image);
-						
-						var contentString = '<div id = "content">' +
-						'<div id="siteNotice">'+
-						  '</div>'+
-						  '<h4 id="firstHeading" class="firstHeading">' + name[i] + '</h4>'+
-						  '<div id="bodyContent">'+
-						  '<p><b>Tweet : </b>' + text[i] + '</p>'+
-						  '</div>'+
-						  '</div>';
+							marker.setIcon(image);
+							
+							var contentString = '<div id = "content">' +
+							'<div id="siteNotice">'+
+							  '</div>'+
+							  '<h4 id="firstHeading" class="firstHeading">' + name[i] + '</h4>'+
+							  '<div id="bodyContent">'+
+							  '<p><b>Tweet : </b>' + text[i] + '</p>'+
+							  '</div>'+
+							  '</div>';
 
-						var infowindow =  new google.maps.InfoWindow({
-							content: ''
-						});
-						bindInfoWindow(marker, map_damage, infowindow, contentString);
-					}
-					function bindInfoWindow(marker, map, infowindow, html) { 
-						google.maps.event.addListener(marker, 'mouseover', function() { 
-							infowindow.setContent(html); 
-							infowindow.open(map, marker); 
-						});
-						google.maps.event.addListener(marker, 'mouseout', function() { 
-							infowindow.close(); 
-						});
-					}
-			 })
-			 .error(function(data) {
-				console.log("error");
-				console.log(data);
-			 });
+							var infowindow =  new google.maps.InfoWindow({
+								content: ''
+							});
+							bindInfoWindow(marker, map_damage, infowindow, contentString);
+						}
+						function bindInfoWindow(marker, map, infowindow, html) { 
+							google.maps.event.addListener(marker, 'mouseover', function() { 
+								infowindow.setContent(html); 
+								infowindow.open(map, marker); 
+							});
+							google.maps.event.addListener(marker, 'mouseout', function() { 
+								infowindow.close(); 
+							});
+						}
+				 },
+			 	 error : function(data) {
+			 		console.log("error");
+		 			console.log(data);
+		 		 }
 
-			}
-		
-    }]);
+			});
+		}
+   }]);

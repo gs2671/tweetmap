@@ -7,7 +7,7 @@ from tweepy import Stream
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 host = ''
 awsauth = AWS4Auth('', '', 'us-east-1', 'es')
@@ -21,11 +21,9 @@ es = Elasticsearch(
 )
 
 
-@app.route("/search", methods=['POST'])
+@application.route("/search", methods=['GET'])
 def search():
-	req = request.json
-	print req
-	search_key = req['search_key']
+	search_key = request.args.get('search_key')
 	search_key = search_key.lower()
 	latitude = []
 	longitude = []
@@ -33,11 +31,9 @@ def search():
 	name = []
 	
 	res = es.search(index="tweet-index", body={"query": {"wildcard": {"text":'*'+search_key+'*'}}},size=400)
-	print("Got %d Hits:" % res['hits']['total'])
 	hits = res['hits']['hits']
 	if hits:
 		for hit in hits:
-			print hit
 			latitude.append(hit['_source']['latitude'])
 			longitude.append(hit['_source']['longitude'])
 			text.append(hit['_source']['text'])
@@ -45,10 +41,10 @@ def search():
 
 	return jsonify({'latitude' : latitude, 'longitude' : longitude, 'text' : text, 'name' : name})
 
-@app.route("/")
+@application.route("/")
 def main():
-	print(es.info())
 	return render_template('index.html')
 
 if __name__ == "__main__":
-	app.run()
+	application.debug = True
+	application.run()

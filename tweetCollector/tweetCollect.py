@@ -29,7 +29,7 @@ class MyListener(StreamListener):
 			temp["longitude"]= str(decoded['coordinates']['coordinates'][0])
 			temp["search_key"]= 'trump'
 			final = json.dumps(temp)
-			host = ''
+			host = 'search-tweet-search2-4xsfsmobznzukhxwo2smwmluje.us-east-1.es.amazonaws.com'
 			awsauth = AWS4Auth('', '', 'us-east-1', 'es')
 
 			es = Elasticsearch(
