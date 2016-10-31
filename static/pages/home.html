@@ -10,7 +10,7 @@
 				<!-- Select button, when user clicks a value from dropdown, will call hasChanged function (see controller.js file-->
 				<md-input-container class="md-block">
 					<label>Choose keyword</label>
-					<md-select ng-model="selectedSRI" ng-change="hasChanged()">
+					<md-select ng-model="selectedKeyword" ng-change="hasChanged()">
 					 <md-option ng-repeat="option in availableOptions" value="{{option.name}}" >{{option.name}}</md-option>
 					</md-select>
 				</md-input-container>
